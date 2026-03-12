@@ -7,17 +7,18 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
         body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
         
-        /* 使用上傳的工廠大門照片作為背景 */
+        /* 1. 首頁大背景圖：植入工廠大門實景 */
         .hero-bg {
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('image_d580b8.png');
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('公司外景.jpg');
             background-size: cover;
             background-position: center;
+            background-repeat: no-repeat;
         }
 
-        /* 根據圖片樣式設計的 Logo 底線 */
+        /* Logo 專屬底線設計 */
         .gawjai-underline {
             position: relative;
             display: inline-block;
@@ -32,27 +33,66 @@
             background-color: #1e1e1e;
         }
 
-        /* 品牌標誌效果 */
+        /* 品牌牆：放大並預設彩色呈現 */
         .partner-logo {
-            filter: grayscale(100%);
-            opacity: 0.5;
-            transition: all 0.4s ease;
-            max-height: 35px;
-            width: auto;
-        }
-        .partner-logo:hover {
             filter: grayscale(0%);
             opacity: 1;
+            transition: all 0.4s ease;
+            max-height: 55px; /* 放大圖示 */
+            max-width: 80%;
+            width: auto;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .partner-logo:hover {
             transform: scale(1.1);
         }
 
-        /* 生產實景圖懸停效果 */
-        .prod-card img {
-            transition: transform 0.7s ease;
+        /* 輪播圖容器樣式 */
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 1rem;
         }
-        .prod-card:hover img {
-            transform: scale(1.05);
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            width: 100%;
         }
+        .carousel-item {
+            min-width: 100%;
+            height: 240px;
+        }
+        .carousel-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #d1d5db;
+            margin: 0 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .carousel-dot.active {
+            background: #2563eb;
+            width: 20px;
+            border-radius: 4px;
+        }
+
+        /* 標籤樣式：統一邊框化 */
+        .dept-tag {
+            border: 1.5px solid #2563eb;
+            color: #2563eb;
+            background: white;
+            transition: all 0.3s ease;
+        }
+        .dept-tag:hover {
+            background: #2563eb;
+            color: white;
+        }
+
+        .hover-zoom img { transition: transform 0.7s ease; }
+        .hover-zoom:hover img { transform: scale(1.05); }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
@@ -61,7 +101,7 @@
     <nav class="fixed w-full z-50 bg-white/95 backdrop-blur-md shadow-sm border-b">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-20 items-center">
-                <!-- Logo：中英文上下呈現 -->
+                <!-- Logo -->
                 <div class="flex flex-col items-start cursor-default">
                     <span class="text-2xl font-black tracking-tight text-gray-900 leading-none">高基</span>
                     <div class="mt-1">
@@ -69,12 +109,12 @@
                     </div>
                 </div>
                 
-                <div class="hidden md:flex space-x-8 items-center">
-                    <a href="#about" class="nav-item hover:text-blue-600 transition font-medium text-sm" data-key="nav_about">關於我們</a>
-                    <a href="#history" class="nav-item hover:text-blue-600 transition font-medium text-sm" data-key="nav_history">品牌歷程</a>
-                    <a href="#design" class="nav-item hover:text-blue-600 transition font-medium text-sm" data-key="nav_design">開發與設計</a>
-                    <a href="#production" class="nav-item hover:text-blue-600 transition font-medium text-sm" data-key="nav_prod">生產設備</a>
-                    <a href="#contact" class="nav-item hover:text-blue-600 transition font-medium text-sm" data-key="nav_contact">聯繫我們</a>
+                <div class="hidden md:flex space-x-8 items-center text-sm font-semibold text-gray-600">
+                    <a href="#about" class="hover:text-blue-600 transition" data-key="nav_about">關於我們</a>
+                    <a href="#history" class="hover:text-blue-600 transition" data-key="nav_history">品牌歷程</a>
+                    <a href="#design" class="hover:text-blue-600 transition" data-key="nav_design">開發與設計</a>
+                    <a href="#production" class="hover:text-blue-600 transition" data-key="nav_prod">生產設備</a>
+                    <a href="#contact" class="hover:text-blue-600 transition" data-key="nav_contact">聯繫我們</a>
                     <button onclick="toggleLanguage()" class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full text-xs font-bold border border-gray-200 transition">
                         <i class="fas fa-globe mr-2"></i><span id="langBtn">English</span>
                     </button>
@@ -83,8 +123,8 @@
         </div>
     </nav>
 
-    <!-- 主視覺區 -->
-    <section class="relative h-screen flex items-center justify-center text-center text-white pt-20 overflow-hidden hero-bg">
+    <!-- 主視覺區：Hero Section -->
+    <section class="relative h-screen flex items-center justify-center text-center text-white pt-20 hero-bg">
         <div class="relative z-10 max-w-4xl px-4">
             <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-tight" data-key="hero_title">東莞高基針織有限公司</h1>
             <p class="text-xl md:text-2xl mb-10 text-gray-200 font-light" data-key="hero_subtitle">專注高端毛衫製造，年產量 120-150 萬件以上</p>
@@ -96,61 +136,56 @@
     </section>
 
     <!-- 關於我們：經營理念 -->
-    <section id="about" class="py-24 bg-white scroll-mt-20">
+    <section id="about" class="py-24 bg-white scroll-mt-20 text-center md:text-left border-b border-gray-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row items-center gap-16">
                 <div class="md:w-1/2">
-                    <div class="rounded-3xl overflow-hidden shadow-2xl border border-gray-100 bg-gray-50">
-                        <img src="./img1.png" alt="Philosophy" class="w-full h-auto">
+                    <div class="rounded-3xl overflow-hidden shadow-2xl border border-gray-100 bg-gray-50 hover-zoom">
+                        <img src="aboutgawjai.jpg" alt="About Gaoji" class="w-full h-auto">
                     </div>
                 </div>
                 <div class="md:w-1/2">
                     <h2 class="text-sm font-bold text-blue-600 uppercase tracking-widest mb-4" data-key="phil_tag">ABOUT GAWJAI</h2>
                     <h2 class="text-4xl font-bold mb-8 text-gray-900" data-key="phil_title">經營理念</h2>
-                    <div class="space-y-8">
-                        <div class="flex gap-6">
-                            <div class="flex-shrink-0 w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-xl font-bold">01</div>
-                            <div>
-                                <h3 class="font-bold text-xl mb-2" data-key="phil_1_t">高品質，優服務，質量第一</h3>
-                                <p class="text-gray-500 leading-relaxed" data-key="phil_1_d">堅持以市場為導向，以客戶為標準的經營理念，精益求精，確保每一件產品都符合高端標準。每一道工序都經過嚴格把關，代表行業頂尖水準。</p>
-                            </div>
-                        </div>
-                        <div class="flex gap-6">
-                            <div class="flex-shrink-0 w-12 h-12 bg-gray-50 text-gray-900 rounded-xl flex items-center justify-center text-xl font-bold">02</div>
-                            <div>
-                                <h3 class="font-bold text-xl mb-2" data-key="phil_2_t">尊客戶，愛企業，客戶至上</h3>
-                                <p class="text-gray-500 leading-relaxed" data-key="phil_2_d">自建廠以來始終堅持顧客至上，竭誠為您服務。我們願以我們的熱情，不斷為客戶創造價值，與您建立長期、穩定、共贏的合作夥伴關係。</p>
-                            </div>
-                        </div>
+                    <div class="space-y-6 text-gray-600 leading-relaxed text-lg font-light text-justify">
+                        <p data-key="phil_1_d">自 1984 成立以來，高基憑藉卓越的針織工藝與對品質的執著追求，在行業內穩步發展。我們始終堅持高品質，優服務，質量第一的宗旨。</p>
+                        <p data-key="phil_2_d">堅持顧客至上，愛企業，以市場為導向，以客戶為標準的經營理念。我們願以專業與熱情與您建立長期、穩定、共贏的合作伙伴關係。</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 品牌歷程與合作夥伴 -->
+    <!-- 品牌歷程：優化 Logo 放大與置中 -->
     <section id="history" class="py-24 bg-gray-900 text-white scroll-mt-20 overflow-hidden relative border-t border-white/10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <h2 class="text-3xl md:text-4xl font-bold mb-10 text-blue-400" data-key="hist_title">品牌歷程與合作夥伴</h2>
             <div class="grid lg:grid-cols-5 gap-12 text-gray-300">
-                <div class="lg:col-span-3">
-                    <p class="text-lg md:text-xl leading-relaxed mb-12 font-light" data-key="hist_content">
-                        自 1984 成立以來，高基憑藉卓越的針織工藝與對品質的執著追求，在行業內穩步發展。多年間，我們有幸與眾多知名品牌達成深度合作，其中包括快零時差快時尚 Forever 21, Nasty Gal；都會魅力與性感風尚的 Guess, BEBE；現代輕奢與精緻都會美學 A.L.C, BCBG, Marciano；浪漫藝文與沉浸式生活美學 Anthropologie, Free People；以及奢華選品殿堂與頂級機能美學 Nordstrom, Nils 等。
+                <div class="lg:col-span-3 text-lg leading-relaxed font-light text-justify">
+                    <p data-key="hist_content">
+                        自 1984 成立以來，高基憑藉卓越的針織工藝與對品質的執著追求，在行業內穩步發展。多年間，我們有幸與眾多知名品牌達成深度合作，其中包括快零時差快時尚 Forever 21, Nasty Gal；都會魅力與性感風尚的 Guess, BEBE；現代輕奢與精緻都會美學 A.L.C, BCBG, Marciano；浪漫藝文與沉浸式生活美學 Anthropologie, Free People；以及奢華選品殿堂與頂級機能美學 Nordstrom, Nils 等。這些合作不僅見證了我們的成長，更是對工廠實力的高度認可。
                     </p>
                 </div>
-                <div class="lg:col-span-2">
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-6 items-center bg-white/5 p-8 rounded-3xl border border-white/10 shadow-inner">
-                        <img src="" alt="Forever 21" class="partner-logo">
-                        <img src="" alt="Guess" class="partner-logo">
-                        <img src="" alt="Nordstrom" class="partner-logo">
-                        <img src="" alt="Anthropologie" class="partner-logo">
-                        <img src="" alt="BCBG" class="partner-logo">
-                        <img src="" alt="Free People" class="partner-logo">
-                        <img src="" alt="BEBE" class="partner-logo">
-                        <img src="" alt="Marciano" class="partner-logo">
-                        <img src="" alt="Nils" class="partner-logo">
+                <div class="lg:col-span-2 flex items-center">
+                    <!-- Logo 網格：使用 justify-items-center 確保置中 -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-10 items-center justify-items-center bg-white/5 p-12 rounded-3xl border border-white/10 shadow-inner w-full">
+                        <img src="forever21.png" alt="Forever 21" class="partner-logo">
+                        <img src="Guess.png" alt="Guess" class="partner-logo">
+                        <img src="Nordstrom.png" alt="Nordstrom" class="partner-logo">
+                        <img src="Anthropologie.jpg" alt="Anthropologie" class="partner-logo">
+                        <img src="BCBG.jpg" alt="BCBG" class="partner-logo">
+                        <img src="Free People.jpg" alt="Free People" class="partner-logo">
                     </div>
                 </div>
+            </div>
+            
+            <!-- 品牌副標簽 -->
+            <div class="mt-12 flex flex-wrap gap-4 opacity-40 justify-center md:justify-start">
+                <span class="px-5 py-2 border border-white/20 rounded-full text-[10px] font-bold tracking-widest uppercase">BEBE</span>
+                <span class="px-5 py-2 border border-white/20 rounded-full text-[10px] font-bold tracking-widest uppercase">A.L.C</span>
+                <span class="px-5 py-2 border border-white/20 rounded-full text-[10px] font-bold tracking-widest uppercase">NASTY GAL</span>
+                <span class="px-5 py-2 border border-white/20 rounded-full text-[10px] font-bold tracking-widest uppercase">MARCIANO</span>
+                <span class="px-5 py-2 border border-white/20 rounded-full text-[10px] font-bold tracking-widest uppercase">NILS</span>
             </div>
         </div>
     </section>
@@ -158,48 +193,45 @@
     <!-- 開發與設計 -->
     <section id="design" class="py-24 bg-white scroll-mt-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6 border-b pb-8">
                 <div class="text-left">
                     <h2 class="text-sm font-bold text-blue-600 uppercase tracking-widest mb-4" data-key="design_tag">DEVELOPMENT & DESIGN</h2>
                     <h2 class="text-4xl font-bold mb-0 text-gray-900" data-key="design_title">開發與設計</h2>
                 </div>
-                <div class="flex space-x-2">
-                    <span class="bg-gray-100 text-gray-800 px-4 py-2 rounded-lg text-xs font-bold" data-key="badge_sales">業務部</span>
-                    <span class="bg-blue-600 text-white px-4 py-2 rounded-lg text-xs font-bold" data-key="badge_dev">開發部</span>
+                <div class="flex space-x-3">
+                    <span class="dept-tag px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider cursor-default" data-key="badge_sales">業務部</span>
+                    <span class="dept-tag px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider cursor-default" data-key="badge_dev">開發部</span>
                 </div>
             </div>
 
-            <div class="flex flex-col md:flex-row items-center gap-16">
-                <div class="md:w-1/2">
-                    <p class="text-gray-500 text-lg leading-relaxed mb-10 font-light" data-key="design_desc">
-                        我們擁有一支思想先進獨特的設計師團隊，均有達到 10 年以上豐厚設計經驗。技術過硬、收到樣品單後，確認樣品生產週期為 5-7 天，訂單生產週期為 25-45 天。每年我們樣辦房會開發 300 多款新款供客戶挑款下單，亦可根據客戶要求的款式精準打樣辦。銷售與開發團隊擁有超過 20 年工作經驗，涵蓋原料紗線、織造技術與毛衫工藝。
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div>
+                    <p class="text-gray-500 text-lg leading-relaxed mb-12 font-light text-justify" data-key="design_desc">
+                        我們擁有一支思想先進獨特的設計師團隊，均有達到 10 年以上豐厚設計經驗。技術過硬、收到樣品單後，確認樣品生產週期為 5-7 天，訂單生產週期為 25-45 天。每年開發超過 300 款新款供客戶挑選。
                     </p>
-                    
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div class="p-6 bg-gray-50 rounded-2xl border border-gray-100 text-center">
+                        <div class="p-6 bg-gray-50 rounded-2xl border border-gray-100 text-center shadow-sm">
                             <span class="block text-2xl font-black text-blue-600 mb-1" data-key="stat_period_val">5-7 天</span>
-                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider" data-key="design_stat_1">確認樣品週期</span>
+                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest" data-key="design_stat_1">確認樣品週期</span>
                         </div>
-                        <div class="p-6 bg-gray-50 rounded-2xl border border-gray-100 text-center">
+                        <div class="p-6 bg-gray-50 rounded-2xl border border-gray-100 text-center shadow-sm">
                             <span class="block text-2xl font-black text-blue-600 mb-1" data-key="stat_annual_val">300+ 款</span>
-                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider" data-key="stat_annual_dev">每年樣辦房開發新款</span>
+                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest" data-key="stat_annual_dev">每年開發新款</span>
                         </div>
-                        <div class="p-6 bg-gray-50 rounded-2xl border border-gray-100 text-center">
+                        <div class="p-6 bg-gray-50 rounded-2xl border border-gray-100 text-center shadow-sm">
                             <span class="block text-2xl font-black text-blue-600 mb-1" data-key="stat_order_val">25-45 天</span>
-                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider" data-key="stat_order_desc">訂單生產週期</span>
+                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest" data-key="stat_order_desc">訂單生產週期</span>
                         </div>
                     </div>
                 </div>
-                <div class="md:w-1/2">
-                    <div class="rounded-3xl overflow-hidden shadow-2xl border border-gray-100 bg-gray-50">
-                        <img src="" alt="Design Dept" class="w-full h-auto">
-                    </div>
+                <div class="rounded-3xl overflow-hidden shadow-xl border border-gray-100 hover-zoom">
+                    <img src="Design Dept.jpg" alt="Design Dept" class="w-full h-auto">
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 生產設備與系統：整合實景照片 -->
+    <!-- 生產設備與系統：維持指定順序標籤 -->
     <section id="production" class="py-24 bg-gray-50 scroll-mt-20 border-t border-b">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
@@ -207,44 +239,56 @@
                     <h2 class="text-sm font-bold text-blue-600 uppercase tracking-widest mb-4" data-key="equip_tag">MANUFACTURING SYSTEM</h2>
                     <h2 class="text-4xl font-bold mb-0 text-gray-900" data-key="equip_title">生產設備與系統</h2>
                 </div>
-                <div class="flex space-x-2">
-                    <span class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg text-xs font-bold" data-key="badge_knitting">織機部門</span>
-                    <span class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg text-xs font-bold" data-key="badge_linking">縫盤部</span>
-                    <span class="bg-blue-600 text-white px-4 py-2 rounded-lg text-xs font-bold" data-key="badge_packaging">包裝部</span>
+                <!-- 依序排列的生產部門標籤 -->
+                <div class="flex flex-wrap gap-3">
+                    <span class="dept-tag px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider cursor-default" data-key="badge_knitting">織機部門</span>
+                    <span class="dept-tag px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider cursor-default" data-key="badge_linking">縫盤部</span>
+                    <span class="dept-tag px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider cursor-default" data-key="badge_qc_repair">查衫/補衣部</span>
+                    <span class="dept-tag px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider cursor-default" data-key="badge_ironing">燙衣部</span>
+                    <span class="dept-tag px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider cursor-default" data-key="badge_packaging">包裝部</span>
                 </div>
             </div>
 
-            <!-- 工藝實景展示區 (使用上傳照片) -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
-                <!-- 第一階段：織機與縫盤 (image_c4c541.png) -->
-                <div class="prod-card group">
-                    <div class="rounded-2xl overflow-hidden shadow-lg mb-6 border border-gray-200 h-64">
-                        <img src="image_c4c541.png" alt="Knitting and Linking" class="w-full h-full object-cover">
+            <!-- 輪播展示：整合實景照片 -->
+            <div class="grid md:grid-cols-3 gap-8 mb-16">
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg border p-2">
+                    <div class="carousel-container" id="carousel-knitting">
+                        <div class="carousel-track">
+                            <img src="Knitting 1.jpg" class="carousel-item object-cover" alt="Knitting 1">
+                            <img src="Knitting 2.jpg" class="carousel-item object-cover" alt="Knitting 2">
+                            <img src="Knitting 3.jpg" class="carousel-item object-cover" alt="Knitting 3">
+                        </div>
+                        <div class="absolute bottom-4 left-0 right-0 flex justify-center carousel-dots"></div>
                     </div>
-                    <h3 class="font-bold text-xl mb-2 text-gray-900" data-key="prod_step_1_t">織機與縫盤工序</h3>
-                    <p class="text-sm text-gray-500 leading-relaxed font-light" data-key="prod_step_1_d">擁有 80 多台德國進口 STOLL 織機覆蓋全針種。縫盤部門提供 20 多組精密縫合工位，極大地滿足設計師與品牌需求。</p>
+                    <p class="pt-4 pb-2 text-center text-sm font-bold text-gray-700" data-key="step_1">織機部門 & 縫盤部</p>
                 </div>
-                
-                <!-- 第二階段：質檢與後整 (image_c4c27c.png) -->
-                <div class="prod-card group">
-                    <div class="rounded-2xl overflow-hidden shadow-lg mb-6 border border-gray-200 h-64">
-                        <img src="image_c4c27c.png" alt="Inspection and QC" class="w-full h-full object-cover">
+
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg border p-2">
+                    <div class="carousel-container" id="carousel-inspection">
+                        <div class="carousel-track">
+                            <img src="Inspection 1.png" class="carousel-item object-cover" alt="Inspection 1">
+                            <img src="Inspection 2.jpg" class="carousel-item object-cover" alt="Inspection 2">
+                            <img src="Inspection 3.jpg" class="carousel-item object-cover" alt="Inspection 3">
+                            <img src="Inspection 4.jpg" class="carousel-item object-cover" alt="Inspection 4">
+                        </div>
+                        <div class="absolute bottom-4 left-0 right-0 flex justify-center carousel-dots"></div>
                     </div>
-                    <h3 class="font-bold text-xl mb-2 text-gray-900" data-key="prod_step_2_t">後整、質檢與修補</h3>
-                    <p class="text-sm text-gray-500 leading-relaxed font-light" data-key="prod_step_2_d">設有專業查衫部門、燙衣部門與補衣 QC 中心。每一件產品都經過嚴格的手工細節檢查與過硬的品質控管。</p>
+                    <p class="pt-4 pb-2 text-center text-sm font-bold text-gray-700" data-key="step_2">查衫、燙衣、補衣與 QC 檢查</p>
                 </div>
-                
-                <!-- 第三階段：包裝與出貨 (image_c4c25b.png) -->
-                <div class="prod-card group">
-                    <div class="rounded-2xl overflow-hidden shadow-lg mb-6 border border-gray-200 h-64">
-                        <img src="image_c4c25b.png" alt="Packaging and Shipping" class="w-full h-full object-cover">
+
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg border p-2">
+                    <div class="carousel-container" id="carousel-logistics">
+                        <div class="carousel-track">
+                            <img src="Logistics 1.png" class="carousel-item object-cover" alt="Logistics 1">
+                            <img src="Logistics 2.png" class="carousel-item object-cover" alt="Logistics 2">
+                        </div>
+                        <div class="absolute bottom-4 left-0 right-0 flex justify-center carousel-dots"></div>
                     </div>
-                    <h3 class="font-bold text-xl mb-2 text-gray-900" data-key="prod_step_3_t">包裝、物流與出貨</h3>
-                    <p class="text-sm text-gray-500 leading-relaxed font-light" data-key="prod_step_3_d">配套環保專業洗水廠與專屬包裝線。我們專注於提供一流的產品和過硬的品質，以及快速的發貨與貨櫃物流服務。</p>
+                    <p class="pt-4 pb-2 text-center text-sm font-bold text-gray-700" data-key="step_3">包裝部門 & 貨櫃出貨</p>
                 </div>
             </div>
-            
-            <!-- 技術設備詳細表 -->
+
+            <!-- 數據明細表：還原洗水辦機 -->
             <div class="overflow-x-auto rounded-3xl border border-gray-200 shadow-xl overflow-hidden text-sm bg-white">
                 <table class="w-full text-left">
                     <thead class="bg-gray-900 text-white font-bold uppercase tracking-wider">
@@ -255,45 +299,47 @@
                             <th class="px-8 py-5" data-key="th_remark">備註</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-100">
-                        <tr class="hover:bg-gray-50"><td class="px-8 py-5 font-bold text-gray-900" data-key="row_1_name">德國 STOLL 電腦織機</td><td class="px-8 py-5">E3, E3.5, E2.5.2, E7.2, E14-E18</td><td class="px-8 py-5" data-key="row_1_qty">80+ 台</td><td class="px-8 py-5 text-blue-600 font-semibold" data-key="row_1_remark">全針種覆蓋</td></tr>
-                        <tr class="hover:bg-gray-50"><td class="px-8 py-5 font-bold text-gray-900" data-key="row_2_name">縫盤挑撞</td><td class="px-8 py-5 text-gray-400">--</td><td class="px-8 py-5" data-key="row_2_qty">15+ 人</td><td class="px-8 py-5 text-blue-600 font-semibold" data-key="row_2_remark">精密縫合工位</td></tr>
-                        <tr class="hover:bg-gray-50"><td class="px-8 py-5 font-bold text-gray-900" data-key="row_3_name">燙衣 / 查衫 / 補衣</td><td class="px-8 py-5 text-gray-400">--</td><td class="px-8 py-5" data-key="row_3_qty">21+ 人</td><td class="px-8 py-5 text-blue-600 font-semibold" data-key="row_3_remark">細節 QC 檢查</td></tr>
-                        <tr class="hover:bg-gray-50"><td class="px-8 py-5 font-bold text-gray-900" data-key="row_4_name">洗水辦機</td><td class="px-8 py-5 text-gray-400">--</td><td class="px-8 py-5" data-key="row_4_qty">配套環保廠</td><td class="px-8 py-5 text-blue-600 font-semibold" data-key="row_4_remark">配備專業洗水辦機</td></tr>
+                    <tbody class="divide-y divide-gray-100 text-gray-700">
+                        <tr><td class="px-8 py-5 font-bold" data-key="row_1_name">德國 STOLL 電腦織機</td><td class="px-8 py-5">E3, E3.5, E2.5.2, E7.2, E14-E18</td><td class="px-8 py-5" data-key="row_1_qty">80+ 台</td><td class="px-8 py-5 text-blue-600 font-semibold" data-key="row_1_remark">全針種覆蓋</td></tr>
+                        <tr><td class="px-8 py-5 font-bold" data-key="row_2_name">縫盤挑撞</td><td class="px-8 py-5 text-gray-400">--</td><td class="px-8 py-5" data-key="row_2_qty">15+ 人</td><td class="px-8 py-5 text-blue-600 font-semibold" data-key="remark_precision">精密縫合</td></tr>
+                        <tr><td class="px-8 py-5 font-bold" data-key="row_3_name">燙衣 / 查衫 / 補衣</td><td class="px-8 py-5 text-gray-400">--</td><td class="px-8 py-5" data-key="row_3_qty">21+ 人</td><td class="px-8 py-5 text-blue-600 font-semibold" data-key="remark_qc">細節 QC</td></tr>
+                        <tr><td class="px-8 py-5 font-bold" data-key="row_4_name">洗水辦機</td><td class="px-8 py-5 text-gray-400">--</td><td class="px-8 py-5" data-key="row_4_qty">配套環保廠</td><td class="px-8 py-5 text-blue-600 font-semibold" data-key="row_4_remark">獨立樣辦機</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </section>
 
-    <!-- 聯繫資訊 -->
+    <!-- 聯繫資訊：視覺強化 -->
     <section id="contact" class="py-24 bg-gray-900 text-white scroll-mt-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid md:grid-cols-2 gap-20">
                 <div>
                     <h2 class="text-4xl font-bold mb-8 tracking-tight" data-key="contact_slogan">讓我們攜手共贏</h2>
-                    <p class="text-gray-400 mb-12 text-lg font-light" data-key="contact_sub">竭誠為您服務，與您建立長期、穩定、共贏的合作夥伴關係。</p>
-                    <div class="space-y-8">
+                    <p class="text-gray-400 mb-12 text-lg font-light text-justify" data-key="contact_sub">竭誠為您服務，建立長期穩定合作伙伴關係。</p>
+                    <div class="space-y-8 text-gray-200">
                         <div class="flex items-center space-x-6">
-                            <div class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center text-xl shadow-lg"><i class="fas fa-phone"></i></div>
+                            <div class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center text-xl shadow-lg shadow-blue-500/20"><i class="fas fa-phone"></i></div>
                             <div>
-                                <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-1" data-key="label_name">聯繫人</p>
-                                <p class="text-xl font-bold">謝先生 | 15917727620</p>
+                                <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-1" data-key="label_name">聯繫人 / Contact</p>
+                                <p class="text-xl font-bold">
+                                    <span data-key="actual_name">謝先生</span> | +86 15917727620
+                                </p>
                             </div>
                         </div>
                         <div class="flex items-center space-x-6">
-                            <div class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center text-xl shadow-lg"><i class="fas fa-map-marker-alt"></i></div>
+                            <div class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center text-xl shadow-lg shadow-blue-500/20"><i class="fas fa-map-marker-alt"></i></div>
                             <div>
-                                <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-1" data-key="label_addr">工廠地址</p>
+                                <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-1" data-key="label_addr">工廠地址 / Address</p>
                                 <p class="text-lg font-medium" data-key="actual_addr">廣東省東莞市常平鎮袁山貝大道富民路85號3號樓101室</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="relative rounded-[2.5rem] overflow-hidden border border-gray-800 shadow-2xl h-80 md:h-auto group">
-                    <img src="https://images.unsplash.com/photo-1574015974293-817f0efebb1b?auto=format&fit=crop&q=80&w=1000" alt="Detail" class="w-full h-full object-cover opacity-40 group-hover:opacity-60 transition duration-700">
-                    <div class="absolute inset-0 p-12 flex flex-col justify-end bg-gradient-to-t from-black via-transparent to-transparent">
-                        <p class="text-2xl font-light italic leading-relaxed">"First-class products and superb quality for global clients."</p>
+                <div class="relative rounded-3xl overflow-hidden border border-gray-800 shadow-2xl h-80 md:h-auto hover-zoom">
+                    <img src="Contact Detail.png" alt="Contact Detail" class="w-full h-full object-cover opacity-30">
+                    <div class="absolute inset-0 p-12 flex flex-col justify-end bg-gradient-to-t from-black/80 to-transparent text-center md:text-left">
+                        <p class="text-2xl font-light italic leading-relaxed">"Quality First, Customer Foremost. Since 1984."</p>
                     </div>
                 </div>
             </div>
@@ -301,11 +347,11 @@
     </section>
 
     <!-- 頁尾 -->
-    <footer class="bg-black py-16 text-center text-gray-600 text-xs font-medium">
+    <footer class="bg-black py-16 text-center text-gray-600 text-xs uppercase tracking-widest font-semibold">
         <div class="max-w-7xl mx-auto px-4">
-            <p class="mb-4 tracking-widest uppercase" data-key="footer_copyright">© 東莞高基針織有限公司 (GAWJAI). All rights reserved.</p>
-            <div class="flex justify-center space-x-4">
-                <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+            <p class="mb-4" data-key="footer_copyright">© 東莞高基針織有限公司 (GAWJAI). All rights reserved.</p>
+            <div class="flex justify-center items-center space-x-4">
+                <span class="w-1 h-1 bg-blue-600 rounded-full"></span>
                 <p data-key="footer_update">填表日期：2024/6/1</p>
             </div>
         </div>
@@ -318,71 +364,86 @@
                 'hero_title': '東莞高基針織有限公司', 'hero_subtitle': '專注高端毛衫製造，年產量 120-150 萬件以上',
                 'btn_view_prod': '查看生產線', 'btn_contact_us': '聯繫我們',
                 'phil_tag': 'ABOUT GAWJAI', 'phil_title': '經營理念',
-                'phil_1_t': '高品質，優服務，質量第一', 'phil_1_d': '堅持以市場為導向，以客戶為標準的經營理念，精益求精。每一道工序都代表行業頂尖水準。',
-                'phil_2_t': '尊客戶，愛企業，客戶至上', 'phil_2_d': '建立長期、穩定、共贏的合作夥伴關係。願以我們的熱情與專業，竭誠為您服務。',
+                'phil_1_d': '自 1984 成立以來，高基憑藉卓越的針織工藝與品質追求，穩步發展。始終堅持高品質，優服務，質量第一。',
+                'phil_2_d': '堅持顧客至上，愛企業，以市場為導向。願與您建立長期共贏夥伴關係，共同創造價值。',
                 'hist_title': '品牌歷程與合作夥伴',
-                'hist_content': '自 1984 成立以來，高基憑藉卓越的針織工藝，與眾多知名品牌達成深度合作，包括 Forever 21, Nasty Gal, Guess, BEBE, A.L.C, BCBG, Marciano, Anthropologie, Free People, Nordstrom, Nils 等。',
-                'design_tag': 'DEVELOPMENT & DESIGN', 'design_title': '開發與設計', 'design_desc': '我們擁有一支設計師團隊，均有 10 年以上經驗。樣品週期 5-7 天，訂單週期 25-45 天。每年開發 300 多款新款。',
+                'hist_content': '自 1984 成立以來，高基憑藉卓越的針織工藝與對品質的執著追求，在行業內穩步發展。多年間，我們有幸與眾多知名品牌達成深度合作，其中包括快零時差快時尚 Forever 21, Nasty Gal；都會魅力與性感風尚的 Guess, BEBE；現代輕奢與精緻都會美學 A.L.C, BCBG, Marciano；浪漫藝文與沉浸式生活美學 Anthropologie, Free People；以及奢華選品殿堂與頂級機能美學 Nordstrom, Nils 等。',
+                'design_tag': 'DEVELOPMENT & DESIGN', 'design_title': '開發與設計', 'design_desc': '我們擁有一支設計師團隊，均有 10 年以上經驗。樣品週期 5-7 天，訂單週期 25-45 天。每年開發 300+ 款新款。',
                 'badge_sales': '業務部', 'badge_dev': '開發部',
+                'badge_knitting': '織機部門', 'badge_linking': '縫盤部', 'badge_qc_repair': '查衫/補衣部', 'badge_ironing': '燙衣部', 'badge_packaging': '包裝部',
                 'stat_period_val': '5-7 天', 'stat_annual_val': '300+ 款', 'stat_order_val': '25-45 天',
-                'design_stat_1': '確認樣品週期', 'stat_annual_dev': '每年樣辦房開發新款', 'stat_order_desc': '訂單生產週期',
-                'equip_tag': 'MANUFACTURING SYSTEM', 'equip_title': '生產設備與系統', 'equip_subtitle': '擁有開發設計、織機(80多台德國進口織機)、縫盤挑撞、燙衣等全套生產系統',
-                'badge_knitting': '織機部門', 'badge_linking': '縫盤部', 'badge_packaging': '包裝部',
-                'prod_step_1_t': '織機與縫盤工序', 'prod_step_1_d': '擁有 80 多台德國進口 STOLL 織機覆蓋全針種。縫盤部門提供 20 多組精密縫合工位。',
-                'prod_step_2_t': '後整、質檢與修補', 'prod_step_2_d': '設有專業查衫、燙衣與 QC 中心。產品經過嚴格手工細節檢查。',
-                'prod_step_3_t': '包裝、物流與出貨', 'prod_step_3_d': '配套洗水廠與專屬包裝線。提供快速發貨與貨櫃物流服務。',
+                'design_stat_1': '確認樣品週期', 'stat_annual_dev': '每年開發新款', 'stat_order_desc': '訂單生產週期',
+                'equip_tag': 'MANUFACTURING SYSTEM', 'equip_title': '生產設備與系統',
+                'step_1': '織機部門 & 縫盤部', 'step_2': '查衫、燙衣、補衣與 QC 檢查', 'step_3': '包裝部門 & 貨櫃出貨',
                 'th_process': '工序/設備名稱', 'th_gauge': '詳細針種 (Gauge)', 'th_qty_h': '數量 / 人數', 'th_remark': '備註',
-                'row_1_name': '德國 STOLL 電腦織機', 'row_1_qty': '80+ 台', 'row_1_remark': '全針種覆蓋',
-                'row_2_name': '縫盤挑撞', 'row_2_qty': '15+ 人', 'row_2_remark': '精密縫合工位',
-                'row_3_name': '燙衣 / 查衫 / 補衣', 'row_3_qty': '21+ 人', 'row_3_remark': '細節 QC 檢查',
-                'row_4_name': '洗水辦機', 'row_4_qty': '配套環保廠', 'row_4_remark': '配備專業洗水辦機',
-                'contact_slogan': '讓我們攜手共贏', 'contact_sub': '與您建立長期、穩定、共贏的合作夥伴關係。',
-                'label_name': '聯繫人', 'label_addr': '工廠地址', 'actual_addr': '廣東省東莞市常平鎮袁山貝大道富民路85號3號樓101室',
+                'row_1_name': '德國 STOLL 電腦織機', 'row_1_remark': '全針種覆蓋', 'row_1_qty': '80+ 台',
+                'row_2_name': '縫盤挑撞', 'row_2_qty': '15+ 人', 'remark_precision': '精密縫合',
+                'row_3_name': '燙衣 / 查衫 / 補衣', 'row_3_qty': '21+ 人', 'remark_qc': '細節 QC',
+                'row_4_name': '洗水辦機', 'row_4_qty': '配套環保廠', 'row_4_remark': '獨立樣辦機',
+                'contact_slogan': '讓我們攜手共贏', 'contact_sub': '竭誠為您服務，建立長期穩定合作伙伴關係。',
+                'label_name': '聯繫人 / Contact', 'actual_name': '謝先生', 'label_addr': '工廠地址 / Address', 'actual_addr': '廣東省東莞市常平鎮袁山貝大道富民路85號3號樓101室',
                 'footer_copyright': '© 東莞高基針織有限公司 (GAWJAI). All rights reserved.', 'footer_update': '填表日期：2024/6/1'
             },
             'en': {
-                'nav_about': 'About Us', 'nav_history': 'History', 'nav_design': 'R&D & Design', 'nav_prod': 'Production', 'nav_contact': 'Contact',
-                'hero_title': 'Dongguan Gaoji Knitting Co., Ltd.', 'hero_subtitle': 'Premium Knitwear Manufacturing, Annual Capacity 1.5M+ Pieces',
-                'btn_view_prod': 'Our Production', 'btn_contact_us': 'Contact Us',
+                'nav_about': 'About Us', 'nav_history': 'History', 'nav_design': 'R&D', 'nav_prod': 'Production', 'nav_contact': 'Contact',
+                'hero_title': 'Dongguan Gaoji Knitting Co., Ltd.', 'hero_subtitle': 'Premium Knitwear, 1.5M+ Annual Capacity',
+                'btn_view_prod': 'View Production Line', 'btn_contact_us': 'Contact Us',
                 'phil_tag': 'ABOUT GAWJAI', 'phil_title': 'Our Philosophy',
-                'phil_1_t': 'Quality First', 'phil_1_d': 'Market-oriented and customer-focused. Every process represents the industry\'s top tier.',
-                'phil_2_t': 'Customer First', 'phil_2_d': 'Building long-term, stable, win-win partnerships. We serve you with passion and professional expertise.',
+                'phil_1_d': 'Since 1984, Gaoji has grown steadily through craftsmanship and quality. We adhere to High Quality, Best Service, and Quality First.',
+                'phil_2_d': 'Customer-centric and market-oriented. We aim to build long-term, stable, win-win global partnerships.',
                 'hist_title': 'History & Partners',
-                'hist_content': 'Since 1984, Gaoji has partnered with top global brands like Forever 21, Guess, Nordstrom, and Anthropologie.',
-                'design_tag': 'DEVELOPMENT & DESIGN', 'design_title': 'Development & Design', 'design_desc': 'Our design team has 10+ years of experience. 5-7 days sample period, 25-45 days order period. 300+ new styles annually.',
-                'badge_sales': 'Sales Dept', 'badge_dev': 'Dev Dept',
+                'hist_content': 'Since 1984, Gaoji has partnered with top brands like Forever 21, Guess, BCBG, Anthropologie, Nordstrom, and more.',
+                'design_tag': 'DEVELOPMENT & DESIGN', 'design_title': 'Development & Design', 'design_desc': 'Expert design team with 10+ years experience. 5-7 days sample period, 25-45 days lead time.',
+                'badge_sales': 'Sales', 'badge_dev': 'R&D',
+                'badge_knitting': 'Knitting', 'badge_linking': 'Linking', 'badge_qc_repair': 'QC & Repair', 'badge_ironing': 'Ironing', 'badge_packaging': 'Packing',
                 'stat_period_val': '5-7 Days', 'stat_annual_val': '300+ Styles', 'stat_order_val': '25-45 Days',
                 'design_stat_1': 'Sample Lead Time', 'stat_annual_dev': 'Annual Designs', 'stat_order_desc': 'Order Lead Time',
-                'equip_tag': 'MANUFACTURING SYSTEM', 'equip_title': 'Production & Systems', 'equip_subtitle': 'Integrated system including R&D, 80+ German STOLL machines, and complete finishing.',
-                'badge_knitting': 'Knitting Dept', 'badge_linking': 'Linking Dept', 'badge_packaging': 'Packing Dept',
-                'prod_step_1_t': 'Knitting & Linking', 'prod_step_1_d': 'Equipped with 80+ German STOLL machines and 20+ precision linking stations.',
-                'prod_step_2_t': 'Finishing & QC', 'prod_step_2_d': 'Professional ironing, inspection, and QC centers with strict manual detail checks.',
-                'prod_step_3_t': 'Packing & Logistics', 'prod_step_3_d': 'Integrated eco-laundry and packaging lines for fast global shipping.',
+                'equip_tag': 'MANUFACTURING SYSTEM', 'equip_title': 'Production System',
+                'step_1': 'Knitting & Linking', 'step_2': 'QC, Repair & Inspection', 'step_3': 'Packing & Logistics',
                 'th_process': 'Process / Equipment', 'th_gauge': 'Gauge', 'th_qty_h': 'Qty / Staff', 'th_remark': 'Remarks',
-                'row_1_name': 'German STOLL', 'row_1_qty': '80+ Units', 'row_1_remark': 'Full Gauge Coverage',
-                'row_2_name': 'Linking', 'row_2_qty': '15+ Staff', 'row_2_remark': 'Precision Stitching',
-                'row_3_name': 'Ironing & QC', 'row_3_qty': '21+ Staff', 'row_3_remark': 'Manual QC Checks',
-                'row_4_name': 'Laundry Dept', 'row_4_qty': 'Eco-Plant', 'row_4_remark': 'Professional Sample Machine',
-                'contact_slogan': 'Let\'s Win Together', 'contact_sub': 'Dedicated to building stable and long-term global partnerships.',
-                'label_name': 'Contact Name', 'label_addr': 'Address', 'actual_addr': 'Room 101, Bldg 3, 85 Fumin Rd, Yuanshanbei Ave, Changping Town, Dongguan',
-                'footer_copyright': '© Dongguan Gaoji Knitting Co., Ltd. (GAWJAI). All rights reserved.', 'footer_update': 'Updated: June 1, 2024'
+                'row_1_name': 'German STOLL', 'row_1_remark': 'Full Gauge Coverage', 'row_1_qty': '80+ Units',
+                'row_2_name': 'Linking', 'row_2_qty': '15+ Staff', 'remark_precision': 'Precision Stitching',
+                'row_3_name': 'Ironing & QC', 'row_3_qty': '21+ Staff', 'remark_qc': 'QC Detail Check',
+                'row_4_name': 'Laundry Sample Machine', 'row_4_qty': 'Eco-Plant', 'row_4_remark': 'Independent Sample Machine',
+                'contact_slogan': 'Let\'s Win Together', 'contact_sub': 'Dedicated to building stable long-term partnerships.',
+                'label_name': 'Contact', 'actual_name': 'Mr. Xie', 'label_addr': 'Address', 'actual_addr': 'Changping Town, Dongguan',
+                'footer_copyright': '© Gaoji Knitting (GAWJAI). All rights reserved.', 'footer_update': 'Updated: June 1, 2024'
             }
         };
 
         let currentLang = 'zh';
-
         function toggleLanguage() {
             currentLang = currentLang === 'zh' ? 'en' : 'zh';
-            const elements = document.querySelectorAll('[data-key]');
-            elements.forEach(el => {
+            document.querySelectorAll('[data-key]').forEach(el => {
                 const key = el.getAttribute('data-key');
-                if (translations[currentLang][key]) {
-                    el.innerText = translations[currentLang][key];
-                }
+                if (translations[currentLang][key]) el.innerText = translations[currentLang][key];
             });
             document.getElementById('langBtn').innerText = currentLang === 'zh' ? 'English' : '中文';
         }
+
+        function initCarousel(id) {
+            const container = document.getElementById(id);
+            if(!container) return;
+            const track = container.querySelector('.carousel-track');
+            const items = container.querySelectorAll('.carousel-item');
+            const dotsContainer = container.querySelector('.carousel-dots');
+            let index = 0;
+            items.forEach((_, i) => {
+                const dot = document.createElement('div');
+                dot.className = `carousel-dot ${i === 0 ? 'active' : ''}`;
+                dot.onclick = () => { index = i; updateSlide(); };
+                dotsContainer.appendChild(dot);
+            });
+            function updateSlide() {
+                track.style.transform = `translateX(-${index * 100}%)`;
+                container.querySelectorAll('.carousel-dot').forEach((d, i) => d.classList.toggle('active', i === index));
+            }
+            setInterval(() => { index = (index + 1) % items.length; updateSlide(); }, 4000);
+        }
+
+        window.onload = () => {
+            ['carousel-knitting', 'carousel-inspection', 'carousel-logistics'].forEach(id => initCarousel(id));
+        };
     </script>
 </body>
-
 </html>
