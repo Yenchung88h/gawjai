@@ -10,7 +10,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
         body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
         
-        /* 1. 首頁大背景圖：植入工廠大門實景 */
+        /* 1. 首頁大背景圖 */
         .hero-bg {
             background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('公司外景.jpg');
             background-size: cover;
@@ -33,7 +33,7 @@
             background-color: #1e1e1e;
         }
 
-        /* 品牌牆：彩色標誌呈現 */
+        /* 品牌牆：放大並置中呈現 */
         .partner-logo {
             filter: grayscale(0%);
             opacity: 1;
@@ -92,6 +92,17 @@
 
         .hover-zoom img { transition: transform 0.7s ease; }
         .hover-zoom:hover img { transform: scale(1.05); }
+
+        /* 手機選單過渡效果 */
+        #mobileMenu {
+            transition: all 0.3s ease-in-out;
+            max-height: 0;
+            overflow: hidden;
+        }
+        #mobileMenu.open {
+            max-height: 400px;
+            padding-bottom: 20px;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
@@ -100,6 +111,7 @@
     <nav class="fixed w-full z-50 bg-white/95 backdrop-blur-md shadow-sm border-b">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-20 items-center">
+                <!-- Logo -->
                 <div class="flex flex-col items-start cursor-default">
                     <span class="text-2xl font-black tracking-tight text-gray-900 leading-none">高基</span>
                     <div class="mt-1">
@@ -107,16 +119,36 @@
                     </div>
                 </div>
                 
-                <div class="hidden md:flex space-x-8 items-center text-sm font-semibold text-gray-600">
-                    <a href="#about" class="hover:text-blue-600 transition" data-key="nav_about">關於我們</a>
-                    <a href="#history" class="hover:text-blue-600 transition" data-key="nav_history">品牌歷程</a>
-                    <a href="#design" class="hover:text-blue-600 transition" data-key="nav_design">開發與設計</a>
-                    <a href="#production" class="hover:text-blue-600 transition" data-key="nav_prod">生產設備</a>
-                    <a href="#contact" class="hover:text-blue-600 transition" data-key="nav_contact">聯繫我們</a>
-                    <button onclick="cycleLanguage()" class="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-full text-xs font-bold transition">
-                        <i class="fas fa-globe mr-2"></i><span id="langBtn">繁體中文</span>
+                <!-- 右側按鈕區域 -->
+                <div class="flex items-center space-x-3 sm:space-x-6">
+                    <!-- 電腦版連結 (手機隱藏) -->
+                    <div class="hidden md:flex space-x-8 items-center text-sm font-semibold text-gray-600">
+                        <a href="#about" class="hover:text-blue-600 transition" data-key="nav_about">關於我們</a>
+                        <a href="#history" class="hover:text-blue-600 transition" data-key="nav_history">品牌歷程</a>
+                        <a href="#design" class="hover:text-blue-600 transition" data-key="nav_design">開發與設計</a>
+                        <a href="#production" class="hover:text-blue-600 transition" data-key="nav_prod">生產設備</a>
+                        <a href="#contact" class="hover:text-blue-600 transition" data-key="nav_contact">聯繫我們</a>
+                    </div>
+
+                    <!-- 語言切換按鈕 (手機版/電腦版均顯示) -->
+                    <button onclick="cycleLanguage()" class="bg-blue-600 text-white hover:bg-blue-700 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-[10px] sm:text-xs font-bold transition flex items-center shadow-md">
+                        <i class="fas fa-globe mr-1.5 sm:mr-2"></i><span id="langBtn">繁體中文</span>
+                    </button>
+
+                    <!-- 手機版選單按鈕 (僅手機版顯示) -->
+                    <button onclick="toggleMobileMenu()" class="md:hidden text-gray-600 hover:text-blue-600 transition focus:outline-none">
+                        <i id="menuIcon" class="fas fa-bars text-xl"></i>
                     </button>
                 </div>
+            </div>
+
+            <!-- 手機版隱藏選單 -->
+            <div id="mobileMenu" class="md:hidden flex flex-col space-y-4 text-center border-t border-gray-100 bg-white">
+                <a href="#about" onclick="toggleMobileMenu()" class="block py-2 text-sm font-bold text-gray-600" data-key="nav_about">關於我們</a>
+                <a href="#history" onclick="toggleMobileMenu()" class="block py-2 text-sm font-bold text-gray-600" data-key="nav_history">品牌歷程</a>
+                <a href="#design" onclick="toggleMobileMenu()" class="block py-2 text-sm font-bold text-gray-600" data-key="nav_design">開發與設計</a>
+                <a href="#production" onclick="toggleMobileMenu()" class="block py-2 text-sm font-bold text-gray-600" data-key="nav_prod">生產設備</a>
+                <a href="#contact" onclick="toggleMobileMenu()" class="block py-2 text-sm font-bold text-gray-600" data-key="nav_contact">聯繫我們</a>
             </div>
         </div>
     </nav>
@@ -124,8 +156,8 @@
     <!-- 主視覺區 -->
     <section class="relative h-screen flex items-center justify-center text-center text-white pt-20 hero-bg">
         <div class="relative z-10 max-w-4xl px-4">
-            <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-tight" data-key="hero_title">東莞高基針織有限公司</h1>
-            <p class="text-xl md:text-2xl mb-10 text-gray-200 font-light" data-key="hero_subtitle">專注高端毛衫製造，年產量 120-150 萬件以上</p>
+            <h1 class="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 tracking-tight leading-tight" data-key="hero_title">東莞高基針織有限公司</h1>
+            <p class="text-lg sm:text-xl md:text-2xl mb-10 text-gray-200 font-light" data-key="hero_subtitle">專注高端毛衫製造，年產量 120-150 萬件以上</p>
             <div class="flex flex-col sm:flex-row justify-center gap-4 text-gray-900">
                 <a href="#production" class="bg-white hover:bg-gray-100 px-8 py-4 rounded-lg font-bold transition shadow-lg" data-key="btn_view_prod">查看生產線</a>
                 <a href="#contact" class="bg-blue-600 text-white hover:bg-blue-700 px-8 py-4 rounded-lg font-bold transition shadow-lg" data-key="btn_contact_us">聯繫我們</a>
@@ -165,7 +197,7 @@
                     </p>
                 </div>
                 <div class="lg:col-span-2">
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-10 items-center justify-items-center bg-white/5 p-12 rounded-3xl border border-white/10 shadow-inner w-full">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-8 sm:gap-10 items-center justify-items-center bg-white/5 p-8 sm:p-12 rounded-3xl border border-white/10 shadow-inner w-full">
                         <img src="forever21.png" alt="Forever 21" class="partner-logo">
                         <img src="Guess.png" alt="Guess" class="partner-logo">
                         <img src="Nordstrom.png" alt="Nordstrom" class="partner-logo">
@@ -176,12 +208,12 @@
                 </div>
             </div>
             
-            <div class="mt-12 flex flex-wrap gap-4 opacity-40 justify-center md:justify-start">
-                <span class="px-5 py-2 border border-white/20 rounded-full text-[10px] font-bold tracking-widest uppercase">BEBE</span>
-                <span class="px-5 py-2 border border-white/20 rounded-full text-[10px] font-bold tracking-widest uppercase">A.L.C</span>
-                <span class="px-5 py-2 border border-white/20 rounded-full text-[10px] font-bold tracking-widest uppercase">NASTY GAL</span>
-                <span class="px-5 py-2 border border-white/20 rounded-full text-[10px] font-bold tracking-widest uppercase">MARCIANO</span>
-                <span class="px-5 py-2 border border-white/20 rounded-full text-[10px] font-bold tracking-widest uppercase">NILS</span>
+            <div class="mt-12 flex flex-wrap gap-3 sm:gap-4 opacity-40 justify-center md:justify-start">
+                <span class="px-4 sm:px-5 py-2 border border-white/20 rounded-full text-[9px] sm:text-[10px] font-bold tracking-widest uppercase">BEBE</span>
+                <span class="px-4 sm:px-5 py-2 border border-white/20 rounded-full text-[9px] sm:text-[10px] font-bold tracking-widest uppercase">A.L.C</span>
+                <span class="px-4 sm:px-5 py-2 border border-white/20 rounded-full text-[9px] sm:text-[10px] font-bold tracking-widest uppercase">NASTY GAL</span>
+                <span class="px-4 sm:px-5 py-2 border border-white/20 rounded-full text-[9px] sm:text-[10px] font-bold tracking-widest uppercase">MARCIANO</span>
+                <span class="px-4 sm:px-5 py-2 border border-white/20 rounded-full text-[9px] sm:text-[10px] font-bold tracking-widest uppercase">NILS</span>
             </div>
         </div>
     </section>
@@ -195,8 +227,8 @@
                     <h2 class="text-4xl font-bold mb-0 text-gray-900" data-key="design_title">開發與設計</h2>
                 </div>
                 <div class="flex space-x-3">
-                    <span class="dept-tag px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider cursor-default" data-key="badge_sales">業務部</span>
-                    <span class="dept-tag px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider cursor-default" data-key="badge_dev">開發部</span>
+                    <span class="dept-tag px-4 sm:px-5 py-2 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider cursor-default" data-key="badge_sales">業務部</span>
+                    <span class="dept-tag px-4 sm:px-5 py-2 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider cursor-default" data-key="badge_dev">開發部</span>
                 </div>
             </div>
 
@@ -231,16 +263,16 @@
     <section id="production" class="py-24 bg-gray-50 scroll-mt-20 border-t border-b">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-                <div class="text-left">
+                <div class="text-left w-full md:w-auto">
                     <h2 class="text-sm font-bold text-blue-600 uppercase tracking-widest mb-4" data-key="equip_tag">MANUFACTURING SYSTEM</h2>
                     <h2 class="text-4xl font-bold mb-0 text-gray-900" data-key="equip_title">生產設備與系統</h2>
                 </div>
-                <div class="flex flex-wrap gap-3">
-                    <span class="dept-tag px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider cursor-default" data-key="badge_knitting">織機部門</span>
-                    <span class="dept-tag px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider cursor-default" data-key="badge_linking">縫盤部</span>
-                    <span class="dept-tag px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider cursor-default" data-key="badge_qc_repair">查衫/補衣部</span>
-                    <span class="dept-tag px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider cursor-default" data-key="badge_ironing">燙衣部</span>
-                    <span class="dept-tag px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider cursor-default" data-key="badge_packaging">包裝部</span>
+                <div class="flex flex-wrap gap-2 sm:gap-3">
+                    <span class="dept-tag px-4 sm:px-5 py-2 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider cursor-default" data-key="badge_knitting">織機部門</span>
+                    <span class="dept-tag px-4 sm:px-5 py-2 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider cursor-default" data-key="badge_linking">縫盤部</span>
+                    <span class="dept-tag px-4 sm:px-5 py-2 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider cursor-default" data-key="badge_qc_repair">查衫/補衣部</span>
+                    <span class="dept-tag px-4 sm:px-5 py-2 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider cursor-default" data-key="badge_ironing">燙衣部</span>
+                    <span class="dept-tag px-4 sm:px-5 py-2 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider cursor-default" data-key="badge_packaging">包裝部</span>
                 </div>
             </div>
 
@@ -329,7 +361,7 @@
                             <div class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center text-xl shadow-lg shadow-blue-500/20"><i class="fab fa-weixin"></i></div>
                             <div>
                                 <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-1" data-key="label_wechat">微信 / WeChat</p>
-                                <p class="text-xl font-bold text-wrap break-all">gjchad / 15917727620</p>
+                                <p class="text-xl font-bold break-all">gjchad / 15917727620</p>
                             </div>
                         </div>
                         <div class="flex items-center space-x-6">
@@ -381,7 +413,7 @@
                 'step_1': '織機部門 & 縫盤部', 'step_2': '查衫、燙衣、補衣與 QC 檢查', 'step_3': '包裝部門 & 貨櫃出貨',
                 'th_process': '工序/設備名稱', 'th_gauge': '詳細針種 (Gauge)', 'th_qty_h': '數量 / 人數', 'th_remark': '備註',
                 'row_1_name': '德國 STOLL 電腦織機', 'row_1_remark': '全針種覆蓋', 'row_1_qty': '80+ 台',
-                'row_2_name': '縫盤挑撞', 'row_2_qty': '15+ 人', 'remark_precision': '精密縫合',
+                'row_2_name': '縫盤挑撞', 'row_2_qty': '20+ 人', 'remark_precision': '精密縫合',
                 'row_3_name': '燙衣 / 查衫 / 補衣', 'row_3_qty': '21+ 人', 'remark_qc': '細節 QC',
                 'row_4_name': '洗水辦機', 'row_4_qty': '配套環保廠', 'row_4_remark': '獨立樣辦機',
                 'contact_slogan': '讓我們攜手共贏', 'contact_sub': '竭誠為您服務，建立長期穩定合作伙伴關係。',
@@ -396,7 +428,7 @@
                 'phil_1_d': '自 1984 成立以来，高基凭借卓越的针织工艺与品质追求，稳步发展。始终坚持高品質，優服务，质量第一。',
                 'phil_2_d': '坚持顾客至上，爱企业，以市场为导向。愿与您建立长期共赢伙伴关系，共同创造价值。',
                 'hist_title': '品牌历程与合作伙伴',
-                'hist_content': '自 1984 成立以来，高基凭借卓越的针织工艺与对品质的执着追求，在行业内稳步发展。多年间，我們有幸與众多知名品牌达成深度合作，其中包括 Forever 21, Nasty Gal, Guess, BEBE, A.L.C, BCBG, Marciano, Anthropologie, Free People, Nordstrom, Nils 等。',
+                'hist_content': '自 1984 成立以来，高基凭借卓越的针织工艺与对品质的执着追求，在行业内稳步发展。多年间，我們有幸與众多知名品牌达成深度合作。',
                 'design_tag': 'DEVELOPMENT & DESIGN', 'design_title': '开发与设计', 'design_desc': '我們拥有一支设计师团队，均有 10 年以上经验。样品周期 5-7 天，订单周期 25-45 天。每年开发 300+ 款新款。',
                 'badge_sales': '业务部', 'badge_dev': '开发部',
                 'badge_knitting': '织机部门', 'badge_linking': '缝盘部', 'badge_qc_repair': '查衫/补衣部', 'badge_ironing': '烫衣部', 'badge_packaging': '包装部',
@@ -406,11 +438,11 @@
                 'step_1': '织机部门 & 缝盘部', 'step_2': '查衫、烫衣、补衣与 QC 检查', 'step_3': '包装部门 & 货柜出货',
                 'th_process': '工序/设备名称', 'th_gauge': '详细针种 (Gauge)', 'th_qty_h': '数量 / 人数', 'th_remark': '备注',
                 'row_1_name': '德国 STOLL 电脑织机', 'row_1_remark': '全针种覆盖', 'row_1_qty': '80+ 台',
-                'row_2_name': '缝盘挑撞', 'row_2_qty': '15+ 人', 'remark_precision': '精密缝合',
+                'row_2_name': '缝盘挑撞', 'row_2_qty': '20+ 人', 'remark_precision': '精密缝合',
                 'row_3_name': '烫衣 / 查衫 / 補衣', 'row_3_qty': '21+ 人', 'remark_qc': '细节 QC',
                 'row_4_name': '洗水办机', 'row_4_qty': '配套环保厂', 'row_4_remark': '独立样办机',
                 'contact_slogan': '让我们携手共赢', 'contact_sub': '竭诚为您服务，建立长期稳定合作伙伴关系。',
-                'label_name': '联系人与电话 / Contact', 'actual_name': '谢先生', 'label_email': '电子邮件 / Email', 'label_wechat': '微信 / WeChat', 'label_addr': '工厂地址 / Address', 'actual_addr': '广东省东莞市常平镇袁山贝大道富民路85号3号楼101室',
+                'label_name': '联系人与电话 / Contact', 'actual_name': '谢先生', 'label_email': '电子邮件 / Email', 'label_wechat': '微信 / WeChat', 'label_addr': '工厂地址 / Address', 'actual_addr': '广东省东莞市常平镇袁山貝大道富民路85号3号楼101室',
                 'footer_copyright': '© 东莞高基针织有限公司 (GAWJAI). All rights reserved.', 'footer_update': '填表日期：2024/6/1'
             },
             'en': {
@@ -431,7 +463,7 @@
                 'step_1': 'Knitting & Linking', 'step_2': 'QC, Repair & Inspection', 'step_3': 'Packing & Logistics',
                 'th_process': 'Process / Equipment', 'th_gauge': 'Gauge', 'th_qty_h': 'Qty / Staff', 'th_remark': 'Remarks',
                 'row_1_name': 'German STOLL', 'row_1_remark': 'Full Gauge Coverage', 'row_1_qty': '80+ Units',
-                'row_2_name': 'Linking', 'row_2_qty': '15+ Staff', 'remark_precision': 'Precision Stitching',
+                'row_2_name': 'Linking', 'row_2_qty': '20+ Staff', 'remark_precision': 'Precision Stitching',
                 'row_3_name': 'Ironing & QC', 'row_3_qty': '21+ Staff', 'remark_qc': 'QC Detail Check',
                 'row_4_name': 'Laundry Sample Machine', 'row_4_qty': 'Eco-Plant', 'row_4_remark': 'Independent Sample Machine',
                 'contact_slogan': 'Let\'s Win Together', 'contact_sub': 'Dedicated to building stable long-term partnerships.',
@@ -455,6 +487,19 @@
             const langBtnText = { 'tw': '繁體中文', 'cn': '简体中文', 'en': 'English' };
             document.getElementById('langBtn').innerText = langBtnText[currentLang];
             document.documentElement.lang = currentLang === 'tw' ? 'zh-Hant' : (currentLang === 'cn' ? 'zh-Hans' : 'en');
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const icon = document.getElementById('menuIcon');
+            menu.classList.toggle('open');
+            if (menu.classList.contains('open')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
         }
 
         function initCarousel(id) {
